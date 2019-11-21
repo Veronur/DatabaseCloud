@@ -27,3 +27,9 @@ def removeTarefas(nome):
         collection.remove({"Nome": "{}".format(nome)})
     except:
         print('Falha na delecao')
+
+print(listaTarefas())
+adicionaTarefas('asdsad')
+listaTarefas()
+removeTarefas('asdsad')
+listaTarefas()
