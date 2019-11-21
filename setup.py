@@ -7,6 +7,7 @@ collection = db.tarefas
 
 def adicionaTarefas(nome):
     tarefa={"Nome": "{}".format(nome)}
+    print(tarefa)
     try:
         collection.insert_one(tarefa).inserted_id
     except:
@@ -30,6 +31,6 @@ def removeTarefas(nome):
 
 print(listaTarefas())
 adicionaTarefas('asdsad')
-listaTarefas()
+print(listaTarefas())
 removeTarefas('asdsad')
-listaTarefas()
+print(listaTarefas())
