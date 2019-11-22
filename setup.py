@@ -15,6 +15,9 @@ conn = pymysql.connect(host='localhost',
 conn.autocommit(True)
 @app.route('/Tarefa/', methods=["GET", "POST"])
 def tarefas():
+    with conn.cursor() as cursor:
+        cursor.execute('SELECT * from Tarefas')
+        res = cursor.fetchall()
     if flask.request.method == 'POST':
         
         task = flask.request.form['data']
