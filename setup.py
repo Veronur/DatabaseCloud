@@ -12,26 +12,36 @@ conn = pymysql.connect(host='localhost',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 
-
-@app.route('/Tarefa/<nome>', methods=["GET", "DELETE", "POST"])
-def tarefas(nome):
+conn.autocommit(True)
+@app.route('/Tarefa/', methods=["GET", "POST"])
+def tarefas():
     if flask.request.method == 'POST':
+        
+        task = flask.request.form['data']
+        print("oi")
         with conn.cursor() as cursor:
             try:
-                cursor.execute('INSERT INTO Tarefas (Nome) VALUES(%s)', (nome))
+                cursor.execute('INSERT INTO Tarefas (Nome) VALUES(%s)', (task))
             except pymysql.err.IntegrityError as e:
                 print(e)
-                raise ValueError(f'Não posso inserir {nome} na tabela')
-    elif flask.request.method == 'DELETE':            
-        with conn.cursor() as cursor:
-            cursor.execute('DELETE FROM Tarefas WHERE idUser=%s', (nome))
-    elif flask.request.method == 'GET':
+                raise ValueError(f'Não posso inserir {task} na tabela')
+    # elif flask.request.method == 'GET':
 
-            with conn.cursor() as cursor:
-                cursor.execute('SELECT * from Tarefas')
-                res = cursor.fetchall()
-                nomes = tuple(x[0] for x in res)
-                return nomes
+        with conn.cursor() as cursor:
+            cursor.execute('SELECT * from Tarefas')
+            res = cursor.fetchall()
+            # print (res)
+            # nomes = tuple(x[0] for x in res)
+    return {'res':res}
+
+@app.route('/Tarefa/<nome>', methods=["DELETE"])
+def del_tarefas(nome):         
+        with conn.cursor() as cursor:
+            cursor.execute('DELETE FROM Tarefas WHERE Nome=%s', (nome))
+            return 'Deleted'
+        return 'Falha na delecao'
+
+
 
 @app.route('/healthcheck/')
 def healthcheck():
