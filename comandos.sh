@@ -4,21 +4,17 @@ sudo apt-get -y upgrade
 sudo wget -qO- https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
 sudo add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/16.04/mssql-server-2017.list)"
 sudo apt -y install libcurl3
-sudo apt install -y mysql-server mysql-client
 sudo apt install expect -y
-
 
 #Download and Configure MySQL
 sudo apt-get -y install zsh htop
 # Install MySQL Server in a Non-Interactive mode. Default root password will be "root"
 echo "mysql-server-5.6 mysql-server/root_password password root" | sudo debconf-set-selections
 echo "mysql-server-5.6 mysql-server/root_password_again password root" | sudo debconf-set-selections
-sudo apt-get -y install mysql-server
+sudo apt install -y mysql-server mysql-client
 sudo mysql_secure_instalation
 
-
-// Not required in actual script
-MYSQL_ROOT_PASSWORD=senha123
+MYSQL_ROOT_PASSWORD=root
 
 SECURE_MYSQL=$(expect -c "
 set timeout 10
@@ -43,12 +39,20 @@ echo "$SECURE_MYSQL"
 aptitude -y purge expect
 
 
-
-mysql -e "DROP DATABASE IF EXISTS Cloud;"
-mysql -e "CREATE DATABASE IF NOT EXISTS Cloud DEFAULT CHARACTER SET utf8 ;"
-mysql -e "USE Cloud ;"
-mysql -e "DROP TABLE IF EXISTS Cloud.Tarefas ;"
-mysql -e "CREATE TABLE IF NOT EXISTS Cloud.Tarefas (Nome VARCHAR(45) UNIQUE,PRIMARY KEY (Nome))ENGINE = InnoDB;"
-
 sudo apt install python3-pip
 python3 -m pip install PyMySQL
+
+mysql -uroot -proot << EOF
+CREATE USER IF NOT EXISTS "delch"@"localhost" IDENTIFIED BY "senha123";
+GRANT ALL PRIVILEGES ON aps1 . * TO "delch"@"localhost";
+FLUSH PRIVILEGES;
+EOF
+
+sudo service mysql restart
+
+mysql -udelch -psenha123 -e "DROP DATABASE IF EXISTS Cloud;"
+mysql -udelch -psenha123 -e "CREATE DATABASE IF NOT EXISTS Cloud DEFAULT CHARACTER SET utf8 ;"
+mysql -udelch -psenha123 -e "USE Cloud ;"
+mysql -udelch -psenha123 -e "DROP TABLE IF EXISTS Cloud.Tarefas ;"
+mysql -udelch -psenha123 -e "CREATE TABLE IF NOT EXISTS Cloud.Tarefas (Nome VARCHAR(45) UNIQUE,PRIMARY KEY (Nome))ENGINE = InnoDB;"
+
