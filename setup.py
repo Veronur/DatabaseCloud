@@ -1,13 +1,13 @@
 import pymongo
 from pymongo import MongoClient
-client = MongoClient('localhost', 5000)
+client = MongoClient()
 db = client.tarefas
 collection = db.tarefas
 
 
 def adicionaTarefas(nome):
     tarefa={"Nome": "{}".format(nome)}
-    print(tarefa)
+    #print(tarefa)
     try:
         collection.insert_one(tarefa)
     except:
