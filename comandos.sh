@@ -6,9 +6,7 @@ sudo add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubunt
 sudo apt -y install libcurl3
 sudo apt install expect -y
 
-#Download and Configure MySQL
 sudo apt-get -y install zsh htop
-# Install MySQL Server in a Non-Interactive mode. Default root password will be "root"
 echo "mysql-server-5.6 mysql-server/root_password password root" | sudo debconf-set-selections
 echo "mysql-server-5.6 mysql-server/root_password_again password root" | sudo debconf-set-selections
 sudo apt install -y mysql-server mysql-client
@@ -39,9 +37,6 @@ echo "$SECURE_MYSQL"
 aptitude -y purge expect
 
 
-sudo apt -y install python3-pip
-python3 -m pip install PyMySQL
-pip3 install flask
 
 mysql -uroot -proot << EOF
 CREATE USER IF NOT EXISTS "delch"@"localhost" IDENTIFIED BY "senha123";
