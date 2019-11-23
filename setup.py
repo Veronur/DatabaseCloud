@@ -1,12 +1,12 @@
 import pymysql.cursors
 import flask
 import os
-
+import sys
 
 app = flask.Flask(__name__)
 
 
-conn = pymysql.connect(host=str(os.environ['IPDataBase']),
+conn = pymysql.connect(host=str(sys.argv[1]),
                              user='root',
                              password='root',
                              db='Cloud',
@@ -48,5 +48,5 @@ def healthcheck():
     return 200
 
 if __name__ == '__main__':
+    print(str(os.environ['IPDataBase']))
     app.run(debug=True, host='0.0.0.0')
-
