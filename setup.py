@@ -1,6 +1,8 @@
 import pymysql.cursors
 import flask
 import os
+print(str(os.environ['IPDataBase']))
+
 
 app = flask.Flask(__name__)
 
@@ -47,5 +49,5 @@ def healthcheck():
     return 200
 
 if __name__ == '__main__':
-    print(str(os.environ['IPDataBase']))
+
     app.run(debug=True, host=str(os.environ['IPDataBase']))
