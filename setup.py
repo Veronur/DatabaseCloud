@@ -1,6 +1,6 @@
 import pymysql.cursors
 import flask
-
+import os
 
 app = flask.Flask(__name__)
 
@@ -16,8 +16,8 @@ conn.autocommit(True)
 @app.route('/Tarefa/', methods=["GET", "POST"])
 def tarefas():
     with conn.cursor() as cursor:
-        cursor.execute('SELECT * from Tarefas')
-        res = cursor.fetchall()
+            cursor.execute('SELECT * from Tarefas')
+            res = cursor.fetchall()
     if flask.request.method == 'POST':
         
         task = flask.request.form['data']
@@ -28,13 +28,9 @@ def tarefas():
             except pymysql.err.IntegrityError as e:
                 print(e)
                 raise ValueError(f'Não posso inserir {task} na tabela')
-    # elif flask.request.method == 'GET':
-
         with conn.cursor() as cursor:
             cursor.execute('SELECT * from Tarefas')
-            res = cursor.fetchall()
-            # print (res)
-            # nomes = tuple(x[0] for x in res)
+            res = cursor.fetchall()        
     return {'res':res}
 
 @app.route('/Tarefa/<nome>', methods=["DELETE"])
@@ -51,4 +47,5 @@ def healthcheck():
     return 200
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    print(str(os.environ['IPDataBase']))
+    app.run(debug=True, host=str(os.environ['IPDataBase']))
