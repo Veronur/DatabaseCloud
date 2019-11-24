@@ -41,10 +41,10 @@ aptitude -y purge expect
 mysql -uroot -proot << EOF
 CREATE USER IF NOT EXISTS "delch"@"localhost" IDENTIFIED BY "senha123";
 GRANT ALL PRIVILEGES ON *.* TO "delch"@"localhost";
+GRANT ALL ON *.* TO delch@'%' IDENTIFIED BY 'senha123';
+GRANT ALL ON *.* TO delch@'0.0.0.0' IDENTIFIED BY 'senha123';
 FLUSH PRIVILEGES;
 EOF
-
-sudo service mysql restart
 
 mysql -udelch -psenha123 << EOF
 DROP DATABASE IF EXISTS Cloud;
@@ -53,3 +53,8 @@ USE Cloud ;
 DROP TABLE IF EXISTS Cloud.Tarefas ;
 CREATE TABLE IF NOT EXISTS Cloud.Tarefas (Nome VARCHAR(45) UNIQUE,PRIMARY KEY (Nome))ENGINE = InnoDB;
 EOF
+
+sudo /sbin/iptables -A INPUT -i eth0 -p tcp --destination-port 3306 -j ACCEPT
+cd /etc/mysql/mysql.conf.d/
+sudo sed -i '43 s/^/#/' mysqld.cnf
+sudo service mysql restart
