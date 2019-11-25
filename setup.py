@@ -7,8 +7,8 @@ app = flask.Flask(__name__)
 
 
 conn = pymysql.connect(host=str(sys.argv[1]),
-                             user='root',
-                             password='root',
+                             user='delch',
+                             password='senha123',
                              db='Cloud',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
@@ -22,7 +22,7 @@ def tarefas():
     if flask.request.method == 'POST':
         
         task = flask.request.form['data']
-        print("oi")
+
         with conn.cursor() as cursor:
             try:
                 cursor.execute('INSERT INTO Tarefas (Nome) VALUES(%s)', (task))
@@ -48,5 +48,4 @@ def healthcheck():
     return 200
 
 if __name__ == '__main__':
-    print(str(os.environ['IPDataBase']))
     app.run(debug=True, host='0.0.0.0')
